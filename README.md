@@ -11,4 +11,4 @@
 **docker-compose -f docker-compose.yml -p activatetasks up -d --build**
 
 ### HTTPS
-SSL ключи хранятся по пути ./nginx/ssl
+Самосгенерированные SSL ключи хранятся по пути nginx/ssl
