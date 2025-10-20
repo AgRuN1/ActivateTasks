@@ -1,0 +1,16 @@
+[project]
+name = "AsyncApi"
+version = "0.1.0"
+requires-python = ">=3.13,<4.0"
+dependencies = [
+    "fastapi>=0.119.0",
+    "faststream[rabbit] (>=0.6.1,<0.7.0)",
+    "pydantic-settings>=2.11.0",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "redis (>=6.4.0,<7.0.0)",
+    "uvicorn (>=0.38.0,<0.39.0)",
+]
+
+[tool.poetry]
+package-mode = false

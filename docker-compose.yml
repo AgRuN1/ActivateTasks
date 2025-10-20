@@ -1,0 +1,95 @@
+services:
+  sync:
+    env_file: ./sync-plug/.env
+    build: ./sync-plug
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
+    volumes:
+      - ./sync-plug:/app
+    networks:
+      - frontend
+      - backend
+
+  async:
+    env_file: ./async-api/.env
+    build: ./async-api
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./async-api:/app
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - redis
+      - rabbitmq
+
+  api-consumer:
+    env_file: ./api-consumer/.env
+    build: ./api-consumer
+    command: faststream run app.main:app --workers 3
+    volumes:
+      - ./api-consumer:/app
+    networks:
+      - backend
+    depends_on:
+      - rabbitmq
+      - redis
+
+  configure:
+    env_file: ./configure/.env
+    build: ./configure
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8081 --reload
+    volumes:
+      - ./configure:/app
+    networks:
+      - backend
+
+  configure-consumer:
+    env_file: ./configure-consumer/.env
+    build: ./configure-consumer
+    command: faststream run app.main:app --workers 3
+    volumes:
+      - ./configure-consumer:/app
+    networks:
+      - backend
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+      image: rabbitmq:3-management
+      ports:
+        - "15672:15672"
+      volumes:
+        - ./rabbitmq_data:/var/lib/rabbitmq
+      environment:
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+      networks:
+        - backend
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/data
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx:ro
+    networks:
+      - frontend
+    depends_on:
+      - sync
+      - async
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
