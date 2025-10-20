@@ -1,5 +1,3 @@
-import json
-
 from fastapi import HTTPException
 from starlette.requests import Request
 
