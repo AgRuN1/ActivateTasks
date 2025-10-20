@@ -9,12 +9,12 @@ from app.api.schema import DataSchema
 from app.api.service import EquipmentService
 from app.config.settings import project_settings
 
-router = APIRouter(prefix="/equipment", tags=["equipment"])
+router = APIRouter(prefix="/sync/api/v1", tags=["equipment"])
 
 logging.basicConfig(format="%(asctime)s %(message)s ID: %(equipment_id)s", level=logging.INFO)
 log = logging.getLogger(__name__)
 
-@router.post("/cpe/{equipment_id}")
+@router.post("/equipment/cpe/{equipment_id}")
 async def activate(
         equipment_id: Annotated[
             str,

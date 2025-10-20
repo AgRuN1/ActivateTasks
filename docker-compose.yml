@@ -2,7 +2,7 @@ services:
   sync:
     env_file: ./sync-plug/.env
     build: ./sync-plug
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8080 --workers 3
     volumes:
       - ./sync-plug:/app
     networks:
@@ -12,7 +12,7 @@ services:
   async:
     env_file: ./async-api/.env
     build: ./async-api
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 3
     volumes:
       - ./async-api:/app
     networks:
@@ -22,33 +22,12 @@ services:
       - redis
       - rabbitmq
 
-  api-consumer:
-    env_file: ./api-consumer/.env
-    build: ./api-consumer
-    command: faststream run app.main:app --workers 3
-    volumes:
-      - ./api-consumer:/app
-    networks:
-      - backend
-    depends_on:
-      - rabbitmq
-      - redis
-
   configure:
     env_file: ./configure/.env
     build: ./configure
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8081 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8081 --workers 3
     volumes:
       - ./configure:/app
-    networks:
-      - backend
-
-  configure-consumer:
-    env_file: ./configure-consumer/.env
-    build: ./configure-consumer
-    command: faststream run app.main:app --workers 3
-    volumes:
-      - ./configure-consumer:/app
     networks:
       - backend
     depends_on:

@@ -8,7 +8,8 @@ from redis.asyncio import Redis
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from app.routes import get_apps_router
+from app.api.view import router as api_router
+from app.consumer.subscriber import router as publisher_router
 from app.config.settings import project_settings
 
 
@@ -25,7 +26,8 @@ app = FastAPI(
     lifespan=lifespan,
     openapi_url=""
 )
-app.include_router(get_apps_router())
+app.include_router(api_router)
+app.include_router(publisher_router)
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):

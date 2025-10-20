@@ -1,21 +1,19 @@
 import uvicorn
 from fastapi import FastAPI
 
-from app.routes import get_apps_router
+from app.api.view import router as api_router
+from app.consumer.subscriber import router as consumer_router
 from app.config.settings import project_settings
 
 
-def get_application() -> FastAPI:
-    application = FastAPI(
-        title=project_settings.PROJECT_NAME,
-        version=project_settings.VERSION,
-        openapi_url=""
-    )
-    application.include_router(get_apps_router())
-
-    return application
-
-app = get_application()
+app = FastAPI(
+    title=project_settings.PROJECT_NAME,
+    version=project_settings.VERSION,
+    openapi_url="",
+    lifespan=consumer_router.lifespan_context,
+)
+app.include_router(api_router)
+app.include_router(consumer_router)
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8081, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)

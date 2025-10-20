@@ -1,22 +1,20 @@
 import json
 import logging
 
-from faststream import FastStream
-from faststream.rabbit import RabbitBroker
+from faststream.rabbit.fastapi import RabbitRouter
 from redis.asyncio import Redis
 
-from app.schema import TaskSchema
+from app.consumer.schema import TaskSchema
 from app.config.settings import project_settings
 
 redis = Redis.from_url(project_settings.REDIS_DSN)
-broker = RabbitBroker(project_settings.RABBITMQ_DSN)
-app = FastStream(broker)
+router = RabbitRouter(project_settings.RABBITMQ_DSN)
 
 logging.basicConfig(format="%(asctime)s %(message)s ID: %(task_id)s %(status)s", level=logging.INFO)
 log = logging.getLogger(__name__)
 
 
-@broker.subscriber("api")
+@router.subscriber("api")
 async def update(data: TaskSchema):
     task = await redis.get(data.task_id)
     if not task:

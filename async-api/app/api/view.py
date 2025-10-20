@@ -7,11 +7,11 @@ from fastapi import APIRouter, Depends, Path, HTTPException
 from app.api.schema import DataSchema
 from app.api.service import TaskService
 
-router = APIRouter(prefix="/equipment", tags=["equipment"])
+router = APIRouter(prefix="/async/api/v1")
 logging.basicConfig(format="%(asctime)s %(message)s ID: %(task_id)s", level=logging.INFO)
 log = logging.getLogger(__name__)
 
-@router.post("/cpe/{equipment_id}")
+@router.post("/equipment/cpe/{equipment_id}")
 async def activate(
         equipment_id: Annotated[
             str,
@@ -27,7 +27,7 @@ async def activate(
         "taskId": task_id,
     }
 
-@router.get("/cpe/{equipment_id}/task/{task_id}")
+@router.get("/equipment/cpe/{equipment_id}/task/{task_id}")
 async def activate(
         equipment_id: Annotated[
             str,
