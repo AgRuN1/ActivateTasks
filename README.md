@@ -4,6 +4,9 @@
 - configure - внутреннее апи, производит непосредственную конфигурацию
 - configure-consumer - RabbitMQ консумер для асинхронной активации устройства и возвращения ответа
 - api-consumer - RabbitMQ консумер для получения фидбека об асинхронной активации устройства
+- [Диаграмма взаимодействия](https://unidraw.io/app/board/8b469fe0f47db3ddcd7c?allow_guest=true)
+![image](/diagram.png)
+
 
 ### Запуск
 **docker-compose -f docker-compose.yml -p activatetasks up -d --build**
