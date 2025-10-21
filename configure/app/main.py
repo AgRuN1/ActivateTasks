@@ -1,3 +1,5 @@
+import logging
+
 import uvicorn
 from fastapi import FastAPI
 
@@ -6,9 +8,11 @@ from app.consumer.subscriber import router as consumer_router
 from app.config.settings import project_settings
 
 
+logging.basicConfig(level=logging.INFO)
 app = FastAPI(
     title=project_settings.PROJECT_NAME,
     version=project_settings.VERSION,
+    debug=project_settings.DEBUG,
     openapi_url="",
     lifespan=consumer_router.lifespan_context,
 )

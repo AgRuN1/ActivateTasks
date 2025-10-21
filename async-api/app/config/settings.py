@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings
 class ProjectSettings(BaseSettings):
     PROJECT_NAME: str
     VERSION: str
+    DEBUG: bool = False
     REDIS_DSN: str
     RABBITMQ_DSN: str
 

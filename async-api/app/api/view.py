@@ -8,7 +8,6 @@ from app.api.schema import DataSchema
 from app.api.service import TaskService
 
 router = APIRouter(prefix="/async/api/v1")
-logging.basicConfig(format="%(asctime)s %(message)s ID: %(task_id)s", level=logging.INFO)
 log = logging.getLogger(__name__)
 
 @router.post("/equipment/cpe/{equipment_id}")
@@ -21,7 +20,7 @@ async def activate(
         service: TaskService = Depends()
 ):
     task_id = await service.send(equipment_id, data.model_dump())
-    log.info("Task is created", extra={"task_id": task_id})
+    log.info(f"Task is created ID: {task_id}")
     return {
         "code": 200,
         "taskId": task_id,

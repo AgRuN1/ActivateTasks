@@ -8,7 +8,7 @@
 
 
 ### Запуск
-**docker-compose -f docker-compose.yml -p activatetasks up -d --build**
+**just build**
 
 ### HTTPS
 Самосгенерированные SSL ключи хранятся по пути nginx/ssl

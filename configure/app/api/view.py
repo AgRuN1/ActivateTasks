@@ -1,19 +1,15 @@
-import asyncio
 import logging
 
-from fastapi import APIRouter
-from starlette.requests import Request
-
-from app.config.settings import project_settings
+from fastapi import APIRouter, Depends
 
 from app.api.schema import DataSchema
+from app.services.AService import AService
 
 router = APIRouter(prefix="/equipment")
-logging.basicConfig(format="%(asctime)s %(message)s ID: %(equipment_id)s", level=logging.INFO)
 log = logging.getLogger(__name__)
 
 @router.post("/cpe/{equipment_id}")
-async def configure(equipment_id: str, data: DataSchema):
-    await asyncio.sleep(data.timeoutInSeconds) # вызов сервиса А
-    log.info("Equipment is configured", extra={"equipment_id": equipment_id})
+async def configure(equipment_id: str, data: DataSchema, service: AService = Depends()):
+    result = await service.run(equipment_id, data.parameters.model_dump(), data.timeoutInSeconds)
+    log.info(f"Equipment is configured ID: {equipment_id}, result: {result}")
     return {"message": "success"}
